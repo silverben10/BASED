@@ -6,7 +6,7 @@ defaultEmojis = {
     # When a user message prompts a DM to be sent, this emoji will be added to the message reactions.
     "dmSent": UninitializedBasedEmoji("📬"),
     "cancel": UninitializedBasedEmoji("🇽"),
-    "submit": UninitializedBasedEmoji("✅"),
+    "submit": UninitializedBasedEmoji("✅"), # Inline on submit
     "spiral": UninitializedBasedEmoji("🌀"),
     "error": UninitializedBasedEmoji("❓"),
     "accept": UninitializedBasedEmoji("👍"),
@@ -52,23 +52,21 @@ helpIntro = "Here are my commands!"
 maxCommandsPerHelpPage = 5
 
 # List of module names from the commands package to import
-includedCommandModules = (  "usr_misc",
+includedCommandModules = [  "usr_misc",
                             "admn_misc",
-                            "dev_misc")
+                            "dev_misc"]
 
 # Text to edit into expired menu messages
 expiredMenuMsg = "😴 This role menu has now expired."
 
-# Can currently only be "fixed"
-timedTaskCheckingType = "fixed"
+timedTaskCheckingType = "fixed" # Can currently only be "fixed"
 # Number of seconds by with the expiry of a timedtask may acceptably be late
 timedTaskLatenessThresholdSeconds = 10
 
 # Whether or not to check for updates to BASED
 BASED_checkForUpdates = True
 
-# Default prefix for commands
-defaultCommandPrefix = "."
+defaultCommandPrefix = "." # Default prefix for commands
 
 # discord user IDs of developers - will be granted developer command permissions
 developers = [188618589102669826]
