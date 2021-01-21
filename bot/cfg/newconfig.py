@@ -1,5 +1,7 @@
 import tokenize
 import os
+
+from tomlkit.items import AoT
 from . import cfg
 from ..lib.emojis import UninitializedBasedEmoji
 import tomlkit
@@ -38,7 +40,7 @@ with open('bot/cfg/cfg.py', 'rb') as fileObj:
                             for toktype, tok, start, end, line in tokenize.tokenize(fileObj.readline)]
     numTokens = len(tokens)
 
-    docs = {tok.value: ConfigProxy({"prev": [], "inline": ""}) for tok in tokens if tok.type == tokenize.NAME and tok.value not in ignoredVarNames}
+    docs = {tok.value: ConfigProxy({"prev": [], "inline": "",}) for tok in tokens if tok.type == tokenize.NAME and tok.value not in ignoredVarNames}
 
     for tokNum in range(len(tokens)):
         tok = tokens[tokNum]
@@ -130,6 +132,87 @@ for var in emptyvars:
 #     print(var + ": PREV: " + ((", ".join("'" + prevDoc + "'" for prevDoc in docs[var].prev)) if len(docs[var].prev) > 0 else "''") + " INLINE: '" + docs[var].inline + "'")
 
 
+def tomlArrayAddItems(carrier, items):
+    for item in items:
+        if type(item) != dict:
+            if var in docs:
+                if docs[var].prev != []:
+                    carrier.add(tomlkit.nl())
+                    for prevComment in docs[var].prev:
+                        print("ADDING PREV TO ",var,":",prevComment)
+                        carrier.add(tomlkit.comment(prevComment))
+            print("ADDING VAR",var)
+            if type(item) == tuple:
+                item = list(item)
+            if type(item) == list:
+                hasTable = False
+                for i in item:
+                    if type(item) == dict:
+                        hasTable = True
+                        break
+                newArr = tomlkit.api.AoT() if hasTable else tomlkit.api.Array()
+                tomlArrayAddItems(newArr, item)
+                item = newArr
+            carrier[var] = item
+            if var in docs and docs[var].inline != "":
+                print("ADDING INLINE TO ",var,":",docs[var].inline)
+                carrier[var].comment(docs[var].inline)
+
+    for var in items:
+        if type(item) == dict:
+            if var in docs and docs[var].prev != []:
+                carrier.add(tomlkit.nl())
+            if var in docs:
+                for prevComment in docs[var].prev:
+                    print("ADDING PREV TO ",var,":",prevComment)
+                    carrier.add(tomlkit.comment(prevComment))
+            print("ADDING VAR",var)
+            carrier[var] = tableFromDict(item)
+
+
+def tomlTableAddItems(carrier, items):
+    if type(carrier) in (tomlkit.api.Array, tomlkit.api.AoT):
+        return tomlArrayAddItems(carrier, items)
+    
+
+    for var in items:
+        if type(items[var]) != dict:
+            if var in docs:
+                if docs[var].prev != []:
+                    carrier.add(tomlkit.nl())
+                    for prevComment in docs[var].prev:
+                        print("ADDING PREV TO ",var,":",prevComment)
+                        carrier.add(tomlkit.comment(prevComment))
+            print("ADDING VAR",var)
+            if type(items[var]) == tuple:
+                items[var] = list(items[var])
+            if type(items[var]) == list:
+                hasTable = False
+                for i in items[var]:
+                    if type(items[var]) == dict:
+                        hasTable = True
+                        break
+                newArr = tomlkit.api.AoT() if hasTable else tomlkit.api.Array()
+                tomlArrayAddItems(newArr, items[var])
+                items[var] = newArr
+            carrier[var] = items[var]
+            if var in docs and docs[var].inline != "":
+                print("ADDING INLINE TO ",var,":",docs[var].inline)
+                carrier[var].comment(docs[var].inline)
+
+    for var in items:
+        if type(items[var]) == dict:
+            if var in docs and docs[var].prev != []:
+                carrier.add(tomlkit.nl())
+            if var in docs:
+                for prevComment in docs[var].prev:
+                    print("ADDING PREV TO ",var,":",prevComment)
+                    carrier.add(tomlkit.comment(prevComment))
+            print("ADDING VAR",var)
+            carrier[var] = tableFromDict(items[var])
+
+
+
 def tableFromDict(d):
     newTable = tomlkit.table()
     for var in d:
@@ -177,7 +260,7 @@ def makeDefaultCfg(fileName="defaultCfg.toml"):
 
     newDoc = tomlkit.document()
     for var in defaults:
-        if type(defaults[var]) != dict:
+        if type(defaults[var]) != dict and (type(defaults[var]) != list or (type(defaults[var]) == list and type(defaults[var][0]) != dict)):
             if var in docs:
                 if docs[var].prev != []:
                     newDoc.add(tomlkit.nl())
@@ -185,26 +268,34 @@ def makeDefaultCfg(fileName="defaultCfg.toml"):
                         print("ADDING PREV TO ",var,":",prevComment)
                         newDoc.add(tomlkit.comment(prevComment))
             print("ADDING VAR",var)
-            if type(defaults[var]) == tuple:
-                newDoc[var] = list(defaults[var])
-            else:
-                newDoc[var] = defaults[var]
+            newDoc[var] = defaults[var]
             if var in docs and docs[var].inline != "":
                 print("ADDING INLINE TO ",var,":",docs[var].inline)
                 newDoc[var].comment(docs[var].inline)
+
+
+    for var in defaults:
+        if type(defaults[var]) == list and type(defaults[var][0]) == dict:
+            if var in docs:
+                if docs[var].prev != []:
+                    newDoc.add(tomlkit.nl())
+                for prevComment in docs[var].prev:
+                    print("ADDING PREV TO ",var,":",prevComment)
+                    newDoc.add(tomlkit.comment(prevComment))
+            print("ADDING VAR",var)
+            newDoc[var] = [tableFromDict(t) for t in defaults[var]]
     
 
     for var in defaults:
         if type(defaults[var]) == dict:
-            if var in docs and docs[var].prev != []:
-                newDoc.add(tomlkit.nl())
             if var in docs:
+                if docs[var].prev != []:
+                    newDoc.add(tomlkit.nl())
                 for prevComment in docs[var].prev:
                     print("ADDING PREV TO ",var,":",prevComment)
                     newDoc.add(tomlkit.comment(prevComment))
             print("ADDING VAR",var)
             newDoc[var] = tableFromDict(defaults[var])
-        
     
     # return defaults
 

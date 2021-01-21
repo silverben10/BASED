@@ -42,6 +42,10 @@ paths = {
     "logsFolder": "saveData" + "/" + "logs"
 }
 
+# This is a test variable
+testVar = [{"att1": 1}, # With an inline comment
+            {"att2": 2}] # And another inline comment
+
 # Names of user access levels to be used in help menus. Also determines the number of access levels available, e.g when registering commands
 userAccessLevels = ["user", "mod", "admin", "dev"]
 
@@ -76,3 +80,6 @@ developers = [188618589102669826]
 # botToken_envVarName contains the name of an environment variable to get your bot token from
 botToken = ""
 botToken_envVarName = ""
+
+
+TEST_TABLE = {"a": {"1": 1, "2": 2}, "b": [{"3": 3, "4": 4}, {"5": 5, "6": 6}]}
