@@ -14,14 +14,14 @@ defaultEmojis = {
     "next": UninitializedBasedEmoji('⏩'),
     "previous": UninitializedBasedEmoji('⏪'),
     "numbers": [UninitializedBasedEmoji("0️⃣"), UninitializedBasedEmoji("1️⃣"), UninitializedBasedEmoji("2️⃣"),
-                    UninitializedBasedEmoji("3️⃣"), UninitializedBasedEmoji("4️⃣"), UninitializedBasedEmoji("5️⃣"),
-                    UninitializedBasedEmoji("6️⃣"), UninitializedBasedEmoji("7️⃣"), UninitializedBasedEmoji("8️⃣"), 
-                    UninitializedBasedEmoji("9️⃣"), UninitializedBasedEmoji("🔟")],
+                UninitializedBasedEmoji("3️⃣"), UninitializedBasedEmoji("4️⃣"), UninitializedBasedEmoji("5️⃣"),
+                UninitializedBasedEmoji("6️⃣"), UninitializedBasedEmoji("7️⃣"), UninitializedBasedEmoji("8️⃣"),
+                UninitializedBasedEmoji("9️⃣"), UninitializedBasedEmoji("🔟")],
 
-    # The default emojis to list in a reaction menu     
+    # The default emojis to list in a reaction menu
     "menuOptions": [UninitializedBasedEmoji("0️⃣"), UninitializedBasedEmoji("1️⃣"), UninitializedBasedEmoji("2️⃣"),
                     UninitializedBasedEmoji("3️⃣"), UninitializedBasedEmoji("4️⃣"), UninitializedBasedEmoji("5️⃣"),
-                    UninitializedBasedEmoji("6️⃣"), UninitializedBasedEmoji("7️⃣"), UninitializedBasedEmoji("8️⃣"), 
+                    UninitializedBasedEmoji("6️⃣"), UninitializedBasedEmoji("7️⃣"), UninitializedBasedEmoji("8️⃣"),
                     UninitializedBasedEmoji("9️⃣"), UninitializedBasedEmoji("🔟")]
 }
 
@@ -29,7 +29,7 @@ timeouts = {
     "helpMenu": {"minutes": 3},
     "BASED_updateCheckFrequency": {"days": 1},
     # The time to wait inbetween database autosaves.
-    "dataSaveFrequency": {"hours":1}
+    "dataSaveFrequency": {"hours": 1}
 }
 
 paths = {
@@ -46,7 +46,8 @@ paths = {
 testVar = [{"att1": 1}, # With an inline comment
             {"att2": 2}] # And another inline comment
 
-# Names of user access levels to be used in help menus. Also determines the number of access levels available, e.g when registering commands
+# Names of user access levels to be used in help menus.
+# Also determines the number of access levels available, e.g when registering commands
 userAccessLevels = ["user", "mod", "admin", "dev"]
 
 # Message to print alongside cmd_help menus
